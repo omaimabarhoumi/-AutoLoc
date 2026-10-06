@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "vehicule")
@@ -39,4 +41,18 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatutVehicule statut;
+
+    // N Vehicule → 1 Agence
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agence_id")
+    private Agence agence;
+
+    // N Vehicule ↔ N Equipement
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "vehicule_equipement",
+            joinColumns = @JoinColumn(name = "vehicule_id"),
+            inverseJoinColumns = @JoinColumn(name = "equipement_id")
+    )
+    private Set<Equipement> equipements = new HashSet<>();
 }
